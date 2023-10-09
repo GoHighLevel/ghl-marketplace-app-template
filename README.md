@@ -9,7 +9,7 @@ This is an Express.js server template for interacting with the GoHighLevel (GHL)
 - [Usage](#usage)
 - [Routes](#routes)
 - [Vue 3 Web Application](#vue-3-web-application)
-- [Contributing](#contributing)
+- [How to Deploy on Render](#how-to-deploy-on-render)
 - [License](#license)
 
 ## Prerequisites
@@ -125,6 +125,56 @@ This project includes a Vue 3 web application located in the `ui` folder under t
    ```
 
    Your Vue 3 application will be served alongside the API functionality at `http://localhost:3000/`. You can access the Vue application by visiting this URL in your web browser.
+
+## How to Deploy on Render
+
+Follow these steps to deploy your GoHighLevel Marketplace App Server on Render:
+
+1. **Sign Up on Render**:
+
+   Create a Render account at [Render](https://render.com/).
+
+2. **Create an new Web service**:
+
+   - Log in to Render.
+   - Click "Web Service" option to create new web service
+
+3. **Connect Your Repository**:
+
+   - Connect your github account
+   - Select your Git repository with the app's code.
+
+4. **Configure Build and Start Commands**:
+
+   - Specify build and start commands:
+     - Build Command: `npm install && npm run build`
+     - Start Command: `npm start`
+
+5. **Set Environment Variables**:
+
+   - In the environment settings, add:
+     - `GHL_APP_CLIENT_ID`: Your GoHighLevel app's client ID.
+     - `GHL_APP_CLIENT_SECRET`: Your GoHighLevel app's client secret.
+     - `GHL_API_DOMAIN`: https://services.leadconnectorhq.com
+
+6. **Deploy Your App**:
+
+   Your app deployment would automatically start once everything configured.
+
+7. **Monitor Deployment**:
+
+   Watch the progress in the Render dashboard in Logs section.
+
+8. **Access Your App**:
+
+   Once deployed, access your app using the provided URL.
+
+9. **Troubleshooting**:
+
+    Refer to Render's docs or contact support for help.
+
+Your GoHighLevel Marketplace App Server is now live on Render.
+
 
 ## License
 

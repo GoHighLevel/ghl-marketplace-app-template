@@ -4,7 +4,7 @@
   "description": "A boilerplate for creating GHL marketplace apps",
   "main": "src/index.ts",
   "scripts": {
-    "build": "npx tsc && npm run build-ui && cp -r ./src/ui/dist ./dist/ui/dist",
+    "build": "npx tsc && npm run build-ui && mkdir -p ./dist/ui/dist && cp -r ./src/ui/dist ./dist/ui/dist",
     "build-ui": "cd src/ui && npm i && npm run build && cd ../../",
     "start": "node dist/index.js",
     "dev": "npm run build-ui && ts-node-dev src/index.ts"
