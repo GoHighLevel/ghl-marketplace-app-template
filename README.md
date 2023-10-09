@@ -1,4 +1,3 @@
-```markdown
 # GoHighLevel Marketplace App Server
 
 This is an Express.js server template for interacting with the GoHighLevel (GHL) API. It demonstrates how to set up an Express server to handle authorization and make GET requests to the GoHighLevel API.
@@ -129,5 +128,4 @@ This project includes a Vue 3 web application located in the `ui` folder under t
 
 ## License
 
-CONFIRM THIS WITH SID
-```
+This project is licensed under the [MIT License](LICENSE).
