@@ -89,6 +89,10 @@ app.get("/example-api-call-location", async (req: Request, res: Response) => {
   }
 });
 
+app.post("example-webhook-handler",async (req: Request, res: Response) => {
+    console.log(re.body)
+})
+
 /* The code `app.get("/", function (req, res) {
   res.sendFile(path + "index.html");
 });` sets up a route for the root URL ("/") of the server.  This is
