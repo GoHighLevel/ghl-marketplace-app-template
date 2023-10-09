@@ -55,8 +55,8 @@ app.get("/example-api-call-location", async (req: Request, res: Response) => {
     method of the `GHL` class and passes the `locationId` as a parameter. This method checks if
     there is an existing installation for the provided locationId and returns a boolean value
     indicating whether the installation exists or not. */
-  if (ghl.checkInstallationExists(req.params.locationId)) {
-    try {
+  try {
+    if (ghl.checkInstallationExists(req.params.locationId)) {
       const request = await ghl
         .requests(req.query.locationId as string)
         .get(`/contacts/?locationId=${req.query.locationId}`, {
@@ -65,19 +65,15 @@ app.get("/example-api-call-location", async (req: Request, res: Response) => {
           },
         });
       return res.send(request.data);
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    /* The line `await ghl.getLocationTokenFromCompanyToken(req.query.companyId as string,
+    } else {
+      /* The line `await ghl.getLocationTokenFromCompanyToken(req.query.companyId as string,
         req.query.locationId as string)` is calling the `getLocationTokenFromCompanyToken` method of the
         `GHL` class. This method is used to retrieve the location token for a specific location within a
         company. */
-    await ghl.getLocationTokenFromCompanyToken(
-      req.query.companyId as string,
-      req.query.locationId as string
-    );
-    try {
+      await ghl.getLocationTokenFromCompanyToken(
+        req.query.companyId as string,
+        req.query.locationId as string
+      );
       const request = await ghl
         .requests(req.query.locationId as string)
         .get(`/contacts/?locationId=${req.query.locationId}`, {
@@ -86,9 +82,10 @@ app.get("/example-api-call-location", async (req: Request, res: Response) => {
           },
         });
       return res.send(request.data);
-    } catch (error) {
-      console.log(error);
     }
+  } catch (error) {
+    console.log(error);
+    res.send(error).status(400)
   }
 });
 
