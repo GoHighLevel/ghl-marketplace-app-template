@@ -16,7 +16,6 @@ export interface InstallationDetails {
   userType: AppUserType;
   companyId?: string;
   locationId?: string;
-  hashedCompanyId?: string;
 }
 
 /* The Model class is responsible for saving and retrieving installation details, access tokens, and
