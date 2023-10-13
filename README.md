@@ -56,10 +56,10 @@ This Express server template provides routes for handling authorization and maki
 
 ### Authorization
 
-To setup the authorization process, you can add the below URL to redirect uri section on Your marketplace app:
+To setup the authorization process, you can add the below URL to redirect url section on Your marketplace app:
 
 ```
-http://localhost:3000/authorize-handler?code=your-authorization-code
+http://localhost:3000/authorize-handler
 ```
 
 After obtaining the Installation details from GHL you can make changes in code to redirect user to anywhere you would like user journey to continue.
