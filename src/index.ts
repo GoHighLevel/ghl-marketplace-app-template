@@ -1,4 +1,4 @@
-/* The code you provided is a TypeScript code that sets up an Express server and defines several routes
+/*you provided is a TypeScript code that sets up an Express server and defines several routes
 for handling HTTP requests. */
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
@@ -9,7 +9,7 @@ const path = __dirname + "/ui/dist/";
 dotenv.config();
 const app: Express = express();
 
-/* The code `app.use(express.static(path));` is setting up a middleware in the Express server. The
+/*`app.use(express.static(path));` is setting up a middleware in the Express server. The
 `express.static` middleware is used to serve static files such as HTML, CSS, JavaScript, and images. */
 app.use(express.static(path));
 
@@ -20,14 +20,14 @@ const ghl = new GHL();
 
 const port = process.env.PORT;
 
-/* The code `app.get("/authorize-handler", async (req: Request, res: Response) => { ... })` sets up an example how you can authorization requests */
+/*`app.get("/authorize-handler", async (req: Request, res: Response) => { ... })` sets up an example how you can authorization requests */
 app.get("/authorize-handler", async (req: Request, res: Response) => {
   const { code } = req.query;
   await ghl.authorizationHandler(code as string);
   res.redirect("https://app.gohighlevel.com/");
 });
 
-/* The code `app.get("/example-api-call", async (req: Request, res: Response) => { ... })` shows you how you can use ghl object to make get requests
+/*`app.get("/example-api-call", async (req: Request, res: Response) => { ... })` shows you how you can use ghl object to make get requests
  ghl object in abstract would handle all of the authorization part over here. */
 app.get("/example-api-call", async (req: Request, res: Response) => {
   if (ghl.checkInstallationExists(req.query.companyId as string)) {
@@ -47,7 +47,7 @@ app.get("/example-api-call", async (req: Request, res: Response) => {
   return res.send("Installation for this company does not exists");
 });
 
-/* The code `app.get("/example-api-call-location", async (req: Request, res: Response) => { ... })` shows you how you can use ghl object to make get requests
+/*`app.get("/example-api-call-location", async (req: Request, res: Response) => { ... })` shows you how you can use ghl object to make get requests
  ghl object in abstract would handle all of the authorization part over here. */
 app.get("/example-api-call-location", async (req: Request, res: Response) => {
   /* The line `if(ghl.checkInstallationExists(req.params.locationId)){` is checking if an
@@ -66,10 +66,10 @@ app.get("/example-api-call-location", async (req: Request, res: Response) => {
         });
       return res.send(request.data);
     } else {
-      /* The line `await ghl.getLocationTokenFromCompanyToken(req.query.companyId as string,
-        req.query.locationId as string)` is calling the `getLocationTokenFromCompanyToken` method of the
-        `GHL` class. This method is used to retrieve the location token for a specific location within a
-        company. */
+      /* NOTE: This flow would only work if you have a distribution type of both Location & Company & OAuth read-write scopes are configured. 
+        The line `await ghl.getLocationTokenFromCompanyToken(req.query.companyId as string, req.query.locationId as string)`
+         is calling the `getLocationTokenFromCompanyToken` method of the
+        `GHL` class. This method is used to retrieve the location token for a specific location within a company. */
       await ghl.getLocationTokenFromCompanyToken(
         req.query.companyId as string,
         req.query.locationId as string
@@ -89,7 +89,7 @@ app.get("/example-api-call-location", async (req: Request, res: Response) => {
   }
 });
 
-/* The code `app.post("example-webhook-handler",async (req: Request, res: Response) => {
+/*`app.post("example-webhook-handler",async (req: Request, res: Response) => {
     console.log(req.body)
 })` sets up a route for handling HTTP POST requests to the "/example-webhook-handler" endpoint. The below POST
 api can be used to subscribe to various webhook events configured for the app. */
@@ -97,7 +97,7 @@ app.post("example-webhook-handler",async (req: Request, res: Response) => {
     console.log(req.body)
 })
 
-/* The code `app.get("/", function (req, res) {
+/*`app.get("/", function (req, res) {
   res.sendFile(path + "index.html");
 });` sets up a route for the root URL ("/") of the server.  This is
  used to serve the main HTML file of a web application. */
@@ -105,7 +105,7 @@ app.get("/", function (req, res) {
   res.sendFile(path + "index.html");
 });
 
-/* The code `app.listen(port, () => {
+/*`app.listen(port, () => {
   console.log(`GHL app listening on port `);
 });` is starting the Express server and making it listen on the specified port. */
 app.listen(port, () => {

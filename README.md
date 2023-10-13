@@ -16,7 +16,7 @@ This is an Express.js server template for interacting with the GoHighLevel (GHL)
 
 Before you get started, make sure you have the following prerequisites:
 
-- Node.js and npm installed on your machine.
+- Node.js installed on your machine.
 
 ## Installation
 
@@ -45,7 +45,7 @@ Before you get started, make sure you have the following prerequisites:
 4. Start the dev Express server:
 
    ```bash
-   npm dev
+   npm run dev
    ```
 
    Your server will now be running at `http://localhost:3000` (or your specified port).
@@ -56,28 +56,32 @@ This Express server template provides routes for handling authorization and maki
 
 ### Authorization
 
-To handle the authorization process, access the following route in your browser:
+To setup the authorization process, you can add the below URL to redirect uri section on Your marketplace app:
 
 ```
 http://localhost:3000/authorize-handler?code=your-authorization-code
 ```
 
-Replace `your-authorization-code` with the code obtained during the GoHighLevel authorization flow. After authorization, the user will be redirected to the GoHighLevel app.
+After obtaining the Installation details from GHL you can make changes in code to redirect user to anywhere you would like user journey to continue.
 
 ### Making API Calls
 
+For showcasing use of obtained installation i have created two example api call.
+
 #### Example API Call
 
+This dummy api calls GHL user api to fetch users for a specific company. Note: Your app must have users read scope added to you app.
 To make an example API call to GoHighLevel, access the following route:
 
 ```
 http://localhost:3000/example-api-call?companyId=your-company-id
 ```
 
-Replace `your-company-id` with the company ID for which you want to make the API call. This route demonstrates making a GET request to the GoHighLevel API using the `ghl.requests` method.
+Replace `your-company-id` with the company ID for which you want to make the API call. Make sure your aop is installed for that specific company. This route demonstrates making a GET request to the GoHighLevel API using the `ghl.requests` method.
 
 #### Example API Call with Location
 
+This is another example where we are making call to contacts API. This flow searches for installation of the location you are trying to make call
 To make an example API call for a specific location, access the following route:
 
 ```
@@ -92,10 +96,11 @@ Replace `your-company-id` and `your-location-id` with the respective company and
 - `/example-api-call`: Makes an example API call to GoHighLevel for a company.
 - `/example-api-call-location`: Makes an example API call to GoHighLevel for a specific location within a company.
 - `/`: Serves the main HTML file and static assets of your web application.
+- `Webhook Handling`: A route (/example-webhook-handler) has been added to handle incoming POST requests, likely for handling webhooks. It logs the body of the incoming request. You can add it tou your webhook URL section under your app to start receiving requests.
 
 ## Vue 3 Web Application
 
-This project includes a Vue 3 web application located in the `ui` folder under the `src` directory. The Vue application is designed to be served by the Express.js server. To work with the Vue 3 application, follow these steps:
+This project includes a Vue 3 web application located in the `ui` folder under the `src` directory. The Vue application is designed to be served by the Express.js server.You can use this UI section to build custom pages. To work with the Vue 3 application, follow these steps:
 
 1. Navigate to the `ui` folder:
 
