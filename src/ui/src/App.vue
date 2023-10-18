@@ -10,6 +10,11 @@ export default {
   name: 'App',
   components: {
     HelloWorld
+  },
+  async mounted(){
+    
+    const data = await window.ghl.getUserData();
+    console.log("user-details", data)
   }
 }
 </script>
