@@ -28,6 +28,11 @@ export class GHL {
     await this.generateAccessTokenRefreshTokenPair(code);
   }
 
+  decryptSSOData(key: string){
+    const data = CryptoJS.AES.decrypt(key, process.env.GHL_APP_SSO_KEY as string).toString(CryptoJS.enc.Utf8)
+    return JSON.parse(data)
+  }
+
 /**
  * The function creates an instance of Axios with a base URL and interceptors for handling
  * authorization and refreshing access tokens.

@@ -3,11 +3,14 @@ for handling HTTP requests. */
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { GHL } from "./ghl";
+import * as CryptoJS from 'crypto-js'
+import { json } from "body-parser";
 
 const path = __dirname + "/ui/dist/";
 
 dotenv.config();
 const app: Express = express();
+app.use(json({ type: 'application/json' }))
 
 /*`app.use(express.static(path));` is setting up a middleware in the Express server. The
 `express.static` middleware is used to serve static files such as HTML, CSS, JavaScript, and images. */
@@ -93,8 +96,25 @@ app.get("/example-api-call-location", async (req: Request, res: Response) => {
     console.log(req.body)
 })` sets up a route for handling HTTP POST requests to the "/example-webhook-handler" endpoint. The below POST
 api can be used to subscribe to various webhook events configured for the app. */
-app.post("example-webhook-handler",async (req: Request, res: Response) => {
+app.post("/example-webhook-handler",async (req: Request, res: Response) => {
     console.log(req.body)
+})
+
+
+/* The `app.post("/decrypt-sso",async (req: Request, res: Response) => { ... })` route is used to
+decrypt session details using ssoKey. */
+app.post("/decrypt-sso",async (req: Request, res: Response) => {
+  const {key} = req.body || {}
+  if(!key){
+    return res.status(400).send("Please send valid key")
+  }
+  try {
+    const data = ghl.decryptSSOData(key)
+    res.send(data)
+  } catch (error) {
+    res.status(400).send("Invalid Key")
+    console.log(error)  
+  }
 })
 
 /*`app.get("/", function (req, res) {
