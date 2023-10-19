@@ -109,9 +109,10 @@ app.post("/decrypt-sso",async (req: Request, res: Response) => {
     return res.status(400).send("Please send valid key")
   }
   try {
-    const data = CryptoJS.AES.decrypt(key, process.env.SSO_KEY as string).toString(CryptoJS.enc.Utf8)
-    res.send(JSON.parse(data))
+    const data = ghl.decryptSSOData(key)
+    res.send(data)
   } catch (error) {
+    res.status(400).send("Invalid Key")
     console.log(error)  
   }
 })

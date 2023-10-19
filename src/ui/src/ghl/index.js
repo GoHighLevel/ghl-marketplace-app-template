@@ -1,3 +1,5 @@
+/* The above class is a JavaScript GHL helper class that retrieves user data by sending a request to a server and
+decrypting the response using a key. */
 export class GHL {
   appId;
 

@@ -8,6 +8,7 @@ This is an Express.js server template for interacting with the GoHighLevel (GHL)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Routes](#routes)
+- [SSO](#sso)
 - [Vue 3 Web Application](#vue-3-web-application)
 - [How to Deploy on Render](#how-to-deploy-on-render)
 - [License](#license)
@@ -97,6 +98,11 @@ Replace `your-company-id` and `your-location-id` with the respective company and
 - `/example-api-call-location`: Makes an example API call to GoHighLevel for a specific location within a company.
 - `/`: Serves the main HTML file and static assets of your web application.
 - `Webhook Handling`: A route (/example-webhook-handler) has been added to handle incoming POST requests, likely for handling webhooks. It logs the body of the incoming request. You can add it tou your webhook URL section under your app to start receiving requests.
+- `/decrypt-sso`: A route (/decrypt-sso) has been added to decrypt sso request response received from parent app (Please refer UI app for more details).
+
+## SSO
+
+Single Sign-On (SSO) is a centralized authentication method that streamlines access to various applications or services with a single set of login credentials. In the context of GoHighLevel, their SSO functionality currently supports integration exclusively with custom pages. When you implement SSO with custom pages through your application's UI, accessible via an iframe, you have the capability to request encrypted SSO details. These encrypted details can be decrypted using the SSOKey provided by GoHighLevel's marketplace, and an example API for this purpose has been included in the repository for straightforward integration.
 
 ## Vue 3 Web Application
 
@@ -161,6 +167,7 @@ Follow these steps to deploy your GoHighLevel Marketplace App Server on Render:
      - `GHL_APP_CLIENT_ID`: Your GoHighLevel app's client ID.
      - `GHL_APP_CLIENT_SECRET`: Your GoHighLevel app's client secret.
      - `GHL_API_DOMAIN`: https://services.leadconnectorhq.com
+     - `GHL_APP_SSO_KEY`: Your app's active SSO Key.
 
 6. **Deploy Your App**:
 
