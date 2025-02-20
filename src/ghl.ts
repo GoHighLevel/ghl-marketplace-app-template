@@ -3,6 +3,14 @@ import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 
 import { Model, TokenType } from "./model";
 
+interface AuthorizationResult {
+  error?: string;
+  error_description?: string;
+  access_token?: string;
+  refresh_token?: string;
+  [key: string]: any;
+}
+
 /* The GHL class is responsible for handling authorization, making API requests, and managing access
 tokens and refresh tokens for a specific resource. */
 export class GHL {
@@ -19,13 +27,14 @@ export class GHL {
  * obtained from the authorization server. It is used to exchange for an access token and refresh token
  * pair.
  */
-  async authorizationHandler(code: string) {
+  async authorizationHandler(code: string): Promise<AuthorizationResult> {
     if (!code) {
       console.warn(
         "Please provide code when making call to authorization Handler"
       );
+      return { error: "no_code", error_description: "No authorization code provided" };
     }
-    await this.generateAccessTokenRefreshTokenPair(code);
+    return await this.generateAccessTokenRefreshTokenPair(code);
   }
 
   decryptSSOData(key: string){
@@ -107,19 +116,43 @@ export class GHL {
     companyId: string,
     locationId: string
   ) {
-    const res = await this.requests(companyId).post(
-      "/oauth/locationToken",
-      {
+    try {
+      console.log("Attempting to get location token with params:", {
         companyId,
         locationId,
-      },
-      {
-        headers: {
-          Version: "2021-07-28",
+        hasCompanyToken: !!this.model.getAccessToken(companyId),
+        scopes: this.model.installationObjects[companyId]?.scope?.split(' ')
+      });
+
+      const res = await this.requests(companyId).post(
+        "/oauth/locationToken",
+        {
+          companyId,
+          locationId,
         },
-      }
-    );
-    this.model.saveInstallationInfo(res.data);
+        {
+          headers: {
+            Version: "2021-07-28",
+          },
+        }
+      );
+
+      console.log("Location token response:", {
+        status: res.status,
+        hasData: !!res.data,
+        data: res.data
+      });
+
+      this.model.saveInstallationInfo(res.data);
+    } catch (error: any) {
+      console.error("Error getting location token:", {
+        status: error?.response?.status,
+        statusText: error?.response?.statusText,
+        data: error?.response?.data,
+        message: error?.message
+      });
+      throw error;
+    }
   }
 
   private async refreshAccessToken(resourceId: string) {
@@ -143,6 +176,15 @@ export class GHL {
 
   private async generateAccessTokenRefreshTokenPair(code: string) {
     try {
+      console.log("Attempting to exchange code for tokens with params:", {
+        client_id: process.env.GHL_APP_CLIENT_ID,
+        // Don't log the full secret
+        client_secret: process.env.GHL_APP_CLIENT_SECRET ? '***' : 'undefined',
+        grant_type: "authorization_code",
+        code: code,
+        api_domain: process.env.GHL_API_DOMAIN
+      });
+
       const resp = await axios.post(
         `${process.env.GHL_API_DOMAIN}/oauth/token`,
         qs.stringify({
@@ -153,9 +195,17 @@ export class GHL {
         }),
         { headers: { "content-type": "application/x-www-form-urlencoded" } }
       );
+      console.log("Token exchange response:", resp.data);
       this.model.saveInstallationInfo(resp.data);
+      return resp.data;
     } catch (error: any) {
-      console.error(error?.response?.data);
+      console.error("Token exchange error details:", {
+        status: error?.response?.status,
+        statusText: error?.response?.statusText,
+        data: error?.response?.data,
+        headers: error?.response?.headers
+      });
+      return error?.response?.data || { error: "unknown_error", error_description: "An unknown error occurred" };
     }
   }
 }

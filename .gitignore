@@ -16,3 +16,7 @@ dist
 # Logs
 logs
 *.log
+
+# Installation data file
+installation-data.json
+.vercel

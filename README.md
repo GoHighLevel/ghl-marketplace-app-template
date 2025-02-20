@@ -4,14 +4,20 @@ This is an Express.js server template for interacting with the GoHighLevel (GHL)
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Routes](#routes)
-- [SSO](#sso)
-- [Vue 3 Web Application](#vue-3-web-application)
-- [How to Deploy on Render](#how-to-deploy-on-render)
-- [License](#license)
+- [GoHighLevel Marketplace App Server](#gohighlevel-marketplace-app-server)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Authorization](#authorization)
+    - [Making API Calls](#making-api-calls)
+      - [Example API Call](#example-api-call)
+      - [Example API Call with Location](#example-api-call-with-location)
+  - [Routes](#routes)
+  - [SSO](#sso)
+  - [Vue 3 Web Application](#vue-3-web-application)
+  - [How to Deploy on Render](#how-to-deploy-on-render)
+  - [License](#license)
 
 ## Prerequisites
 
@@ -38,7 +44,7 @@ Before you get started, make sure you have the following prerequisites:
 
    Create a `.env` file by copying .env.example in the project root directory and add the following variables:
 
-   ```
+   ```   
         GHL_APP_CLIENT_ID=<CLIENT_ID> #Change it to you apps client id
         GHL_APP_CLIENT_SECRET=<CLIENT_SECRET> #Change it to your apps secret
    ```
@@ -166,7 +172,7 @@ Follow these steps to deploy your GoHighLevel Marketplace App Server on Render:
    - In the environment settings, add:
      - `GHL_APP_CLIENT_ID`: Your GoHighLevel app's client ID.
      - `GHL_APP_CLIENT_SECRET`: Your GoHighLevel app's client secret.
-     - `GHL_API_DOMAIN`: https://services.leadconnectorhq.com
+     - `GHL_API_DOMAIN`: <https://services.leadconnectorhq.com>
      - `GHL_APP_SSO_KEY`: Your app's active SSO Key.
 
 6. **Deploy Your App**:
@@ -186,7 +192,6 @@ Follow these steps to deploy your GoHighLevel Marketplace App Server on Render:
     Refer to Render's docs or contact support for help.
 
 Your GoHighLevel Marketplace App Server is now live on Render.
-
 
 ## License
 

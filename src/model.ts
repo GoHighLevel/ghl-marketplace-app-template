@@ -1,3 +1,5 @@
+import { supabase, Installation, InsertInstallation } from './supabase';
+
 export enum AppUserType {
   Company = "Company",
   Location = "Location",
@@ -23,18 +25,113 @@ refresh tokens. */
 export class Model {
   public installationObjects: { [key: string]: InstallationDetails } = {};
 
-/**
- * The function saves installation information based on either the location ID or the company ID.
- * @param {InstallationDetails} details - The `details` parameter is an object of type
- * `InstallationDetails`.
- */
+  constructor() {
+    this.loadFromDatabase();
+  }
+
+  private async loadFromDatabase() {
+    try {
+      const { data: installations, error } = await supabase
+        .from('installations')
+        .select('*');
+
+      if (error) throw error;
+
+      // Convert database format to in-memory format
+      installations?.forEach(installation => {
+        const resourceId = installation.resource_id;
+        this.installationObjects[resourceId] = {
+          access_token: installation.access_token,
+          token_type: TokenType.Bearer,
+          expires_in: installation.expires_in,
+          refresh_token: installation.refresh_token,
+          scope: installation.scope,
+          userType: installation.user_type as AppUserType,
+          companyId: installation.company_id,
+          locationId: installation.location_id
+        };
+      });
+
+      console.log('Loaded installations from database:', this.getAllInstallations());
+    } catch (error) {
+      console.error('Error loading installation data:', error);
+    }
+  }
+
+  private async saveToDatabase(resourceId: string, details: InstallationDetails) {
+    try {
+      const installation: InsertInstallation = {
+        resource_id: resourceId,
+        access_token: details.access_token,
+        refresh_token: details.refresh_token,
+        token_type: details.token_type,
+        expires_in: details.expires_in,
+        scope: details.scope,
+        user_type: details.userType,
+        company_id: details.companyId,
+        location_id: details.locationId
+      };
+
+      const { error } = await supabase
+        .from('installations')
+        .upsert({ 
+          ...installation,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'resource_id'
+        });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error saving installation data:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Returns all current installations for debugging
+   */
+  getAllInstallations() {
+    return Object.keys(this.installationObjects).map(key => ({
+      resourceId: key,
+      userType: this.installationObjects[key].userType,
+      companyId: this.installationObjects[key].companyId,
+      locationId: this.installationObjects[key].locationId,
+      hasAccessToken: !!this.installationObjects[key].access_token
+    }));
+  }
+
+  /**
+   * The function saves installation information based on either the location ID or the company ID.
+   * @param {InstallationDetails} details - The `details` parameter is an object of type
+   * `InstallationDetails`.
+   */
   async saveInstallationInfo(details: InstallationDetails) {
-    console.log(details);
+    console.log("Saving installation info:", {
+      userType: details.userType,
+      companyId: details.companyId,
+      locationId: details.locationId,
+      hasAccessToken: !!details.access_token,
+      hasRefreshToken: !!details.refresh_token
+    });
+
+    if (details.companyId) {
+      this.installationObjects[details.companyId] = details;
+      await this.saveToDatabase(details.companyId, details);
+      console.log(`Saved installation for company: ${details.companyId}`);
+    }
+    
     if (details.locationId) {
       this.installationObjects[details.locationId] = details;
-    } else if (details.companyId) {
-      this.installationObjects[details.companyId] = details;
+      await this.saveToDatabase(details.locationId, details);
+      console.log(`Saved installation for location: ${details.locationId}`);
     }
+
+    if (!details.locationId && !details.companyId) {
+      console.warn("No locationId or companyId found in installation details");
+    }
+
+    console.log("Current installations:", this.getAllInstallations());
   }
 
 /**
@@ -57,9 +154,10 @@ export class Model {
  * @param {string} token - The "token" parameter is a string that represents the access token that you
  * want to set for a specific resource.
  */
-  setAccessToken(resourceId: string, token: string) {
+  async setAccessToken(resourceId: string, token: string) {
     if (this.installationObjects[resourceId]) {
-        this.installationObjects[resourceId].access_token = token;
+      this.installationObjects[resourceId].access_token = token;
+      await this.saveToDatabase(resourceId, this.installationObjects[resourceId]);
     }
   }
 
@@ -84,9 +182,10 @@ export class Model {
  * expires. It is typically used in authentication systems to maintain a user's session without
  * requiring them to re-enter their credentials.
  */
-  setRefreshToken(resourceId: string, token: string) {
+  async setRefreshToken(resourceId: string, token: string) {
     if (this.installationObjects[resourceId]) {
-        this.installationObjects[resourceId].refresh_token = token;
+      this.installationObjects[resourceId].refresh_token = token;
+      await this.saveToDatabase(resourceId, this.installationObjects[resourceId]);
     }
   }
 }
